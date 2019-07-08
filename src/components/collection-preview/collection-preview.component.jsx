@@ -1,0 +1,21 @@
+import React from 'react';
+import './collection-preview.styles.scss';
+import CollectionItem from '../collection-item/collection-item.component'
+
+const CollectionPreview = ({ title, items }) => {
+    return (
+        <div className="collection-preview">
+            <h1 className="title">{title.toUpperCase()}</h1>
+            <div className="preview">
+                {items.filter((item, index) => index < 4).map(({ id, ...otherItemProps }) => {
+                    return <CollectionItem key={id} {...otherItemProps} />
+                })}
+            </div>
+        </div>
+    );
+}
+
+export default CollectionPreview;
+
+//any annynoumus components like map function will be called everytime,when the 
+//component re-render, it might cause performence problem
