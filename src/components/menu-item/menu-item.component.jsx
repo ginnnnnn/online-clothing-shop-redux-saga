@@ -1,10 +1,13 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import './menu-item.styles.scss';
 
 
-const MenuItem = ({ title, imageUrl, size, linkUrl }) => {
+const MenuItem = ({ title, imageUrl, size, linkUrl, history, match }) => {
     return (
-        <div className={`menu-item ${size}`}>
+        <div
+            onClick={() => { history.push(`${match.url}${linkUrl}`) }}
+            className={`menu-item ${size}`}>
             <div
                 style={{ backgroundImage: `url(${imageUrl})` }}
                 className="background-image" />
@@ -16,8 +19,11 @@ const MenuItem = ({ title, imageUrl, size, linkUrl }) => {
     );
 }
 
-export default MenuItem;
+export default withRouter(MenuItem);
 
-//set a self close div with className background-image instead 
+//background-image ,set a self close div with className background-image instead 
 //of wrapping other elements can do a scale effect just with the background
 //but not the others elements
+
+//withRouter is hoc takes a component as an argument and returen a powered component
+//more props injected

@@ -48,13 +48,10 @@ class Directory extends React.Component {
     render() {
         return (
             <div className="directory-menu">
-                {this.state.sections.map(({ title, imageUrl, size, id, linkUrl }) => {
+                {this.state.sections.map(({ id, ...otherSectionPorps }) => {
                     return <MenuItem
                         key={id}
-                        title={title}
-                        imageUrl={imageUrl}
-                        size={size}
-                        linkUrl={linkUrl} />
+                        {...otherSectionPorps} />
                 })}
             </div>
 
@@ -63,3 +60,5 @@ class Directory extends React.Component {
 }
 
 export default Directory;
+//ES6 allow us to pass props like {id,...otherSectionProps} ,when we pass the props
+// it's name=name .like title=title,imageUrl=imageUrl ... ={...otherSectionPorps}
