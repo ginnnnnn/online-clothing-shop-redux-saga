@@ -19,15 +19,12 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
-//auth for email and password authentication 
-//firestore for firebase database
+
 
 
 // create an async function which catch the auth data of user and create an user document
 //to firestore
-export const createUserProfileDocument = async (userAuth, ...additionalData) => {
+export const createUserProfileDocument = async (userAuth, additionalData) => {
     if (!userAuth) return;
     const userRef = firestore.doc(`users/${userAuth.uid}`);
     //userRef is just a location we try to reach,it doesnt vertify it's exist or not
@@ -36,7 +33,7 @@ export const createUserProfileDocument = async (userAuth, ...additionalData) => 
     //snapshot is an actual user data we just retrived from firestore.
     //if a new user just signin snapshot should be null
 
-    if (!snapshot.exist) {
+    if (!snapshot.exists) {
         //!snapshot.exist if user not exist in firestore create one
         const { displayName, email } = userAuth;
         const createAt = new Date();
@@ -52,8 +49,12 @@ export const createUserProfileDocument = async (userAuth, ...additionalData) => 
         }
     }
     return userRef;
-}
+};
 
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
+//auth for email and password authentication 
+//firestore for firebase database
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account' });
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
