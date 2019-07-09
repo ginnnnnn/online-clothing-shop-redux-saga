@@ -7,7 +7,7 @@ import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
 
-import { auth } from './firebase/firebase.utils'
+import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 
 
 class App extends React.Component {
@@ -18,13 +18,31 @@ class App extends React.Component {
       currentUser: null
     }
   }
+
+  //set a initail unsubAuth function
   unsubscribeFromAuth = null;
+
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       //firebase.auth().onAuthStateChanged subscribe auth and return unsubscribe function
       //if signin user is an obj if signout user is null, always setState to triger rerender
-      this.setState({ currentUser: user });
-      console.log(user);
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        //onSnapshot() is a realtime watching document state change method
+        //it has method data() to get data and property exist check if data exist
+        userRef.onSnapshot(snapshot => {
+          this.setState({
+            currentUser: {
+              id: snapshot.id,
+              ...snapshot.data()
+            }
+          });
+          console.log(this.state)
+        });
+      } else {
+        this.setState({ currentUser: userAuth });
+        //set currentUser to null
+      }
     })
   }
 
