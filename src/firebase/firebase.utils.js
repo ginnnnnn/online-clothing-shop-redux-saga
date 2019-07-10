@@ -36,14 +36,18 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     if (!snapshot.exists) {
         //!snapshot.exist if user not exist in firestore create one
         const { displayName, email } = userAuth;
+        //displayName only exists if user sign in as google
         const createAt = new Date();
         try {
-            await userRef.set({
-                displayName,
-                email,
-                createAt,
-                ...additionalData
-            })
+            await userRef.set(
+                {
+                    displayName,
+                    email,
+                    createAt,
+                    ...additionalData
+                }
+            )
+            //add doc to user collection with id =uid and doc , addtionalData ={displName}
         } catch (error) {
             console.log('error creating user', error.message);
         }

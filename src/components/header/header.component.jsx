@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './header.styles.scss';
 
+import { connect } from 'react-redux';
+
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { auth } from '../../firebase/firebase.utils'
 
@@ -25,10 +27,17 @@ const Header = ({ currentUser }) => {
     );
 }
 
-export default Header;
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
+});
+
+export default connect(mapStateToProps)(Header);
 
 //when importing SVG in React. The ReactComponent import name is special 
 //and tells Create React App that you want a React component that renders an SVG,
 // rather than its filename.
 
 //auth.signOut() ,firebase.auth().signOut(); firebase signOut function
+
+//mapStateToProps(state) return an obj as props, state = root-reducer whitch return a obj
+//{user:userReducer,...} 
