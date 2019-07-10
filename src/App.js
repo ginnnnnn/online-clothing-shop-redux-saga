@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 
 import { connect } from 'react-redux';
@@ -8,7 +8,7 @@ import { setCurrentUser } from './redux/user/user.actions'
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
-import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
+import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
 
 
 
@@ -19,6 +19,7 @@ class App extends React.Component {
 
   //set a initail unsubAuth function
   unsubscribeFromAuth = null;
+  unsubscribeFromSnapshot = null;
 
   componentDidMount() {
     const { setCurrentUser } = this.props;
@@ -30,7 +31,7 @@ class App extends React.Component {
         const userRef = await createUserProfileDocument(userAuth);
         //onSnapshot() is a realtime watching document state change method
         //it has method data() to get data and property exist check if data exist
-        userRef.onSnapshot(snapshot => {
+        this.unsubscribeFromSnapshot = userRef.onSnapshot(snapshot => {
           setCurrentUser({
             id: snapshot.id,
             ...snapshot.data()
@@ -46,6 +47,7 @@ class App extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribeFromAuth();
+    this.unsubscribeFromSnapshot();
     //this prevent memory leak,cus firebase.auth().onAuthStateChanged() will keep monitoring
     //to check user auth status
   }
@@ -58,18 +60,26 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
-          <Route path='/signin' component={SignInAndSignUp} />
+          <Route exact path='/signin'
+            render={() =>
+              this.props.currentUser ?
+                (<Redirect to='/' />)
+                : <SignInAndSignUpPage />} />
         </Switch>
       </div>
     );
   }
 }
 
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser,
+})
+
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 })
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 //without withRouter only the first route get history match location props
 
