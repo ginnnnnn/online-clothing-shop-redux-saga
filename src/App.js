@@ -6,7 +6,7 @@ import './App.css';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { setCurrentUser } from './redux/user/user.actions'
-import { selectCurrentUser } from './redux/user/user.selector';
+import { selectCurrentUser } from './redux/user/user.selectors';
 
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
