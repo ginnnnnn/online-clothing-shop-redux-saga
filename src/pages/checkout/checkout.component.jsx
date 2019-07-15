@@ -1,5 +1,12 @@
 import React from 'react';
-import './checkout.styles.scss';
+import {
+    CheckoutPageContainer,
+    CheckoutHeaderContainer,
+    HeaderBlockContainer,
+    TotalContainer,
+    TestWarningContainer
+
+} from './checkout.styles';
 
 import { connect } from 'react-redux';
 import { selectCartItems, selectCartTotal } from '../../redux/cart/cart.selectors';
@@ -11,34 +18,34 @@ import StripeCheckoutButton from '../../components/stripe-button/stripe-button.c
 
 const CheckoutPage = ({ cartItems, CartTotal }) => {
     return (
-        <div className='checkout-page'>
-            <div className='checkout-header'>
-                <div className='header-block'>
+        <CheckoutPageContainer>
+            <CheckoutHeaderContainer>
+                <HeaderBlockContainer>
                     <span>Product</span>
-                </div>
-                <div className='header-block'>
+                </HeaderBlockContainer>
+                <HeaderBlockContainer>
                     <span>Description</span>
-                </div><div className='header-block'>
+                </HeaderBlockContainer><HeaderBlockContainer>
                     <span>Quantity</span>
-                </div><div className='header-block'>
+                </HeaderBlockContainer><HeaderBlockContainer>
                     <span>Price</span>
-                </div><div className='header-block'>
+                </HeaderBlockContainer><HeaderBlockContainer>
                     <span>Remove</span>
-                </div>
-            </div>
+                </HeaderBlockContainer>
+            </CheckoutHeaderContainer>
             {
                 cartItems.map(cartItem => <CheckoutItem key={cartItem.id} item={cartItem} />)
             }
-            <div className='total'>
+            <TotalContainer>
                 <span>TOTAL: ${CartTotal}</span>
-            </div>
-            <div className="test-warning">
+            </TotalContainer>
+            <TestWarningContainer>
                 <span>Please use this card infomation for testing</span>
                 <br />
                 <span> 4242 4242 4242 4242 -EXP:01/20 -CW:123 </span>
-            </div>
+            </TestWarningContainer>
             <StripeCheckoutButton price={CartTotal} />
-        </div>
+        </CheckoutPageContainer>
     );
 }
 
