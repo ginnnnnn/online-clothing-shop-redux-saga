@@ -41,11 +41,14 @@ class App extends React.Component {
           }
           );
         });
+
       } else {
         setCurrentUser(userAuth)
         //set currentUser to null
       }
     })
+
+    // addCollectionAndDocuments('itemCollections', collectionArray.map(({ title, items }) => ({ title, items })))
   }
 
   componentWillUnmount() {

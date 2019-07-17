@@ -28,6 +28,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     if (!userAuth) return;
     const userRef = firestore.doc(`users/${userAuth.uid}`);
     //userRef is just a location we try to reach,it doesnt vertify it's exist or not
+
     const snapshot = await userRef.get();
     //let snapshot ;firestore.doc('users/12edejiefmei').get().then(user=> snapshot=user);
     //snapshot is an actual user data we just retrived from firestore.
@@ -54,6 +55,42 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
     return userRef;
 };
+
+
+export const convertCollectionsSnapshotToMap = (snapshot) => {
+    const transformedCollections = snapshot.docs.map(doc => {
+        const { title, items } = doc.data()
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            id: doc.id,
+            title,
+            items
+        }
+    })
+    return transformedCollections.reduce((acc, curr) => {
+        acc[curr.title.toLowerCase()] = curr;
+        //create a key in obj and assign a value
+        return acc;
+    }, {});
+}
+
+// export const addCollectionAndDocuments = async (collectionKey, docArrayToAdd) => {
+//     const collectionRef = firestore.collection(collectionKey);
+//     const batch = firestore.batch();
+//     //batch allow us to do all the code at once,in case any code are failed
+
+//     try {
+//         docArrayToAdd.forEach(doc => {
+//             const docRef = collectionRef.doc();
+//             //one item in array create one docRef
+//             batch.set(docRef, doc);
+//             //1st argument is docRef ,2nd is doc obj
+//         })
+//         return await batch.commit()//fire the batch codes,if success return null
+//     } catch (error) {
+//         console.log('error create collection', error.message)
+//     }
+// }
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();

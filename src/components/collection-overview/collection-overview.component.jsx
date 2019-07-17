@@ -12,9 +12,9 @@ import CollectionPreview from '../collection-preview/collection-preview.componen
 const CollectionOverview = ({ collections }) => {
     return (
         <CollectionOverviewContainer>
-            {collections.map((collection) => {
+            {collections ? collections.map((collection) => {
                 return <CollectionPreview key={collection.id} {...collection} />
-            })}
+            }) : []}
         </CollectionOverviewContainer>
     );
 }
