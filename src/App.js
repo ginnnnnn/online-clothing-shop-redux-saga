@@ -1,11 +1,11 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils'
+// import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 import './App.css';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { setCurrentUser } from './redux/user/user.actions'
+import { checkUserSession } from './redux/user/user.actions'
 import { selectCurrentUser } from './redux/user/user.selectors';
 
 import HomePage from './pages/homepage/homepage.component';
@@ -20,42 +20,9 @@ import CheckoutPage from './pages/checkout/checkout.component';
 
 class App extends React.Component {
 
-  //set a initail unsubAuth function
-  unsubscribeFromAuth = null;
-  unsubscribeFromSnapshot = null;
-
   componentDidMount() {
-    const { setCurrentUser } = this.props;
-
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      //firebase.auth().onAuthStateChanged subscribe auth and return unsubscribe function
-      //if signin user is an obj if signout user is null, always setState to triger rerender
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-        //onSnapshot() is a realtime watching document state change method
-        //it has method data() to get data and property exist check if data exist
-        this.unsubscribeFromSnapshot = userRef.onSnapshot(snapshot => {
-          setCurrentUser({
-            id: snapshot.id,
-            ...snapshot.data()
-          }
-          );
-        });
-
-      } else {
-        setCurrentUser(userAuth)
-        //set currentUser to null
-      }
-    })
-
-    // addCollectionAndDocuments('itemCollections', collectionArray.map(({ title, items }) => ({ title, items })))
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-    this.unsubscribeFromSnapshot();
-    //this prevent memory leak,cus firebase.auth().onAuthStateChanged() will keep monitoring
-    //to check user auth status
+    const { checkUserSession } = this.props
+    checkUserSession();
   }
 
 
@@ -78,12 +45,13 @@ class App extends React.Component {
   }
 }
 
+
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser
 })
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: () => dispatch(checkUserSession())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
