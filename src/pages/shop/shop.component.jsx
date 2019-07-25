@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom';
 
 import { connect } from 'react-redux';
@@ -9,32 +9,20 @@ import CollectionPageContainer from '../collection/collection.container';
 
 
 
-class ShopPage extends React.Component {
+const ShopPage = ({ fetchCollectionsStart, match }) => {
 
 
-    componentDidMount() {
-        this.props.fetchCollectionsStart()
-        // const collectionRef = firestore.collection('itemCollections')
-        // this.unsubscribeFromShop = collectionRef.onSnapshot(async snapshot => {
-        //     const collectionsMap = await convertCollectionsSnapshotToMap(snapshot);
-        //     this.props.updateShopCollections(collectionsMap);
-        //     this.setState({ loading: false })
-        // })
-    }
+    useEffect(() => {
+        fetchCollectionsStart()
+    }, [fetchCollectionsStart])
 
-    // componentWillUnmount() {
-    //     this.unsubscribeFromShop()
-    // }
-    render() {
 
-        const { match } = this.props;
-        return (
-            <div className='shop-page'>
-                <Route exact path={`${match.path}`} component={CollectionOverviewContainer} />
-                <Route path={`${match.path}/:collectionId`} component={CollectionPageContainer} />
-            </div>
-        );
-    }
+    return (
+        <div className='shop-page'>
+            <Route exact path={`${match.path}`} component={CollectionOverviewContainer} />
+            <Route path={`${match.path}/:collectionId`} component={CollectionPageContainer} />
+        </div>
+    );
 }
 
 
