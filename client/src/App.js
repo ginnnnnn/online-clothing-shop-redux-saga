@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 // import { auth, createUserProfileDocument } from './firebase/firebase.utils'
-import './App.css';
+
+import { GlobalStyle } from './global.styles'
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -27,6 +28,7 @@ function App({ checkUserSession, currentUser }) {
 
   return (
     <div className="App">
+      <GlobalStyle />
       <Header />
       <Switch>
         <Route exact path='/' component={HomePage} />
@@ -58,3 +60,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(App);
 //mapDispatchToProps(dispatch) return an obj as props it contains functions for set state
 //dispatch is for sending out action to reducer to update state/store,and action we set
 // is a function(user) it return {type:"ACTION_NAME",payload:user}
+
+//GlobalStyle applied by passing as an element at the top of the app ,use createGlobalStyle method
+// provided by styled-component libray
